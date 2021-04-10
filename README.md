@@ -1,7 +1,7 @@
 # Luprox
 
 <div align="center">
-<img src="https://github.com/astanziola/luprox/blob/main/docs/example_pendulum.jpg" alt="luprox"></img>
+<img src="https://github.com/astanziola/luprox/blob/main/docs/pendulum.jpg" alt="luprox"></img>
 </div>
 
 Linear uncertainty propagation using JAX transformations 
@@ -63,7 +63,7 @@ cov_in = jnp.diag(jnp.array([0.0001, 0.001, 0.001, 0.002, 0.0001]))
 linear_trajectory, covariance = solve_linear(params, cov_in) 
 ```
 
-![Example of uncertainty propagation on a damped pendulum simulation](docs/example_pendulum.jpg)
+![Example of uncertainty propagation on a damped pendulum simulation](docs/pendulum.jpg)
 
 # References
 The code in this repository is inspired by [`Measurements.jl`](https://github.com/JuliaPhysics/Measurements.jl) [[Giordano, 2016](https://arxiv.org/abs/1610.08716)] and the [Uncertainty programming lecture notes](https://mitmath.github.io/18337/lecture19/uncertainty_programming) by Chris Rackauckas.
