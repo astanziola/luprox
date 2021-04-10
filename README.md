@@ -1,5 +1,9 @@
 # Luprox
 
+<div align="center">
+<img src="https://github.com/astanziola/luprox/blob/main/docs/example_pendulum.jpg" alt="logo"></img>
+</div>
+
 Linear uncertainty propagation using JAX transformations 
 
 ## Examples
