@@ -24,4 +24,4 @@ Results:
 STD: 0.04352208226919174 (Linear) | 0.04308144003152847 (MC)
 ```
 
-![Example on a function](docs/example.png)
+![Example on a function](docs/example.jpg)
