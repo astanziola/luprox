@@ -6,6 +6,6 @@ setup(
     description="Linear uncertainty propagation using JAX transformations",
     author="Antonio Stanziola",
     author_email="a.stanziola@ucl.ac.uk",
-    packages=["luprox"]
+    packages=["luprox"],
     install_requires=["jax", "jaxlib"]
 )
