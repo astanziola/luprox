@@ -65,5 +65,16 @@ linear_trajectory, covariance = solve_linear(params, cov_in)
 
 ![Example of uncertainty propagation on a damped pendulum simulation](docs/pendulum.jpg)
 
+# Citing
+To cite this repository, please use
+```bibtex
+@software{luprox2021github,
+  author = {Antonio Stanziola},
+  title = {{Luprox}: linear uncertainty propagation in {JAX} programs},
+  url = {https://github.com/astanziola/luprox},
+  year = {2021},
+}
+```
+
 # References
 The code in this repository is inspired by [`Measurements.jl`](https://github.com/JuliaPhysics/Measurements.jl) [[Giordano, 2016](https://arxiv.org/abs/1610.08716)] and the [Uncertainty programming lecture notes](https://mitmath.github.io/18337/lecture19/uncertainty_programming) by Chris Rackauckas.
