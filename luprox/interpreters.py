@@ -1,6 +1,6 @@
 from typing import Any, Callable, Dict
 from jax import numpy as jnp
-from jax import jacfwd, jacrev, vmap, jit, random
+from jax import jacfwd, jacrev, vmap, jit, random, eval_shape
 
 
 def linear_uncertainty(fun: Callable):
@@ -10,21 +10,26 @@ def linear_uncertainty(fun: Callable):
         mean = mean.real
         covariance = covariance.real
 
+        out_shape = eval_shape(fun, mean, *args, **kwargs).shape
+
         def f(x):
-            return fun(x, *args, **kwargs)
+            y = fun(x, *args, **kwargs)
+            return jnp.ravel(y)
 
         # Getting output meand and covariance
         out_mean = f(mean)
+        J = jacfwd(f)(mean)
 
-        if out_mean.size < mean.size:
-            J = jacrev(f)(mean)
-        else:
-            J = jacfwd(f)(mean)
+        out_cov = (jnp.abs(J)**2) @ jnp.sqrt(covariance)# this factor of 4 is odd
+        del J
+        out_cov = jnp.reshape(out_cov, out_shape)
+        out_mean = jnp.reshape(out_mean, out_shape)
 
-        out_cov = jnp.matmul(J, jnp.matmul(covariance, J.T))  # this factor of 4 is odd
         return out_mean, out_cov
 
     return jit(fun_with_uncertainty)
+
+
 
 
 def monte_carlo(fun: Callable, trials):
@@ -38,16 +43,23 @@ def monte_carlo(fun: Callable, trials):
         keys = random.split(key, trials)
 
         L = jnp.linalg.cholesky(covariance)
-        samples = vmap(_sample, in_axes=(None, None, 0))(mean, L, keys)
+        meanval = 0
+        var = 0
+        for i in range(trials):
+            sample = _sample(mean, L, keys[i])
+            meanval = meanval + sample/trials
+            del sample
 
-        return samples
+        for i in range(trials):
+            sample = _sample(mean, L, keys[i])
+            var = var + jnp.abs(sample-meanval)**2/trials
+            del sample
+        return meanval, var
 
-    return jit(sampling_function)
+    return sampling_function
 
 
 def mc_uncertainty(fun: Callable, trials):
     def fun_with_uncertainty(mean, covariance, key):
-        samples = monte_carlo(fun, trials)(mean, covariance, key)
-        return jnp.mean(samples, axis=0), jnp.cov(samples.T)
-
-    return jit(fun_with_uncertainty)
+        return monte_carlo(fun, trials)(mean, covariance, key)
+    return fun_with_uncertainty
